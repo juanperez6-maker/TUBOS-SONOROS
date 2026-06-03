@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tubos Sonoros — Cuaderno Interactivo de Física</title>
+<meta name="description" content="Cuaderno interactivo digital sobre Tubos Sonoros: ondas estacionarias, armónicos, resonancia y aplicaciones musicales. Universidad Tecnológica de Pereira.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},startup:{pageReady:()=>{return MathJax.startup.defaultPageReady().then(()=>{document.querySelectorAll('.page').forEach(p=>{MathJax.typesetPromise([p])})})}}}</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--bg:linear-gradient(135deg,#0f0c29,#302b63,#24243e);--page-bg:#fdfdff;--text:#2c3e50;--heading:#1565c0;--accent:#1565c0;--accent2:#ff6b6b;--accent3:#00c9a7;--gold:#ffd700;--spiral:#667eea;--grid:rgba(100,149,237,0.05);--nav-bg:rgba(255,255,255,0.88);--font:'Inter',sans-serif;--font-serif:'Playfair Display',serif;--glow:rgba(102,126,234,.15)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;transition:background .4s,color .4s}
+body.dark{--bg:linear-gradient(135deg,#0a0a1a,#1a1a3e,#0f0f2e);--page-bg:rgba(20,25,45,.95);--text:#e0e8f0;--heading:#90caf9;--accent:#64b5f6;--accent2:#ff8a80;--accent3:#69f0ae;--grid:rgba(100,149,237,0.03);--nav-bg:rgba(15,20,40,0.92);--spiral:#5c6bc0;--glow:rgba(100,181,246,.1)}
+
+#book-container{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+#progress-bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:1000;transition:width .3s}
+#dark-toggle{position:fixed;top:12px;left:12px;z-index:1001;background:none;border:none;font-size:22px;cursor:pointer;color:var(--heading);opacity:.7;transition:opacity .3s}
+#dark-toggle:hover{opacity:1}
+#fullscreen-btn{position:fixed;top:12px;right:12px;z-index:1001;background:none;border:none;font-size:20px;cursor:pointer;color:var(--heading);opacity:.7}
+#fullscreen-btn:hover{opacity:1}
+#page-info{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1001;font-size:12px;color:var(--text);opacity:.6;font-weight:500}
+
+#book{width:min(95vw,1100px);height:min(88vh,720px);perspective:2000px;position:relative;transform-style:preserve-3d}
+.spread{position:absolute;top:0;left:0;width:100%;height:100%;display:none;opacity:0;transition:opacity .4s,transform .4s;transform-origin:center center;backface-visibility:hidden}
+.spread.active{display:flex;opacity:1;transform:none}
+
+.page{flex:1;background:var(--page-bg);padding:35px 40px;overflow-y:auto;position:relative;box-shadow:2px 2px 20px rgba(0,0,0,.1);background-image:repeating-linear-gradient(var(--grid) 0 1px,transparent 1px 28px),repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 28px);background-size:28px 28px;scrollbar-width:thin;border:1px solid rgba(255,255,255,.08)}
+.page::-webkit-scrollbar{width:6px}
+.page::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+.page-left{border-radius:12px 0 0 12px;border-right:none}
+.page-right{border-radius:0 12px 12px 0;border-left:none}
+.page .page-num{position:absolute;bottom:8px;font-size:11px;color:var(--text);opacity:.4}
+.page-left .page-num{left:15px}
+.page-right .page-num{right:15px}
+
+.spiral{width:40px;display:flex;flex-direction:column;justify-content:space-around;align-items:center;background:linear-gradient(90deg,rgba(240,242,245,.3) 0%,#b0c4de 8%,#4a9edd 25%,#2575c4 40%,#1a6ab5 50%,#2575c4 60%,#4a9edd 75%,#b0c4de 92%,rgba(240,242,245,.3) 100%);border-radius:1px;flex-shrink:0;position:relative;z-index:2;box-shadow:inset 0 0 8px rgba(0,0,0,.1)}
+.spiral-ring{width:38px;height:20px;border-radius:50%;border:none;position:relative;background:linear-gradient(170deg,#e8e8e8 0%,#c0c0c0 8%,#a0a0a0 18%,#787878 35%,#606060 50%,#787878 65%,#a0a0a0 82%,#c8c8c8 92%,#e0e0e0 100%);box-shadow:0 4px 6px rgba(0,0,0,.35),0 -2px 3px rgba(255,255,255,.4),2px 0 4px rgba(0,0,0,.15),-2px 0 4px rgba(0,0,0,.15)}
+.spiral-ring::before{content:"";position:absolute;inset:3px 6px;border-radius:50%;background:linear-gradient(175deg,#909090 0%,#b8b8b8 25%,#d8d8d8 45%,#c0c0c0 55%,#a0a0a0 75%,#808080 100%);box-shadow:inset 0 3px 5px rgba(0,0,0,.45),inset 0 -2px 4px rgba(255,255,255,.35)}
+.spiral-ring::after{content:"";position:absolute;top:2px;left:25%;width:50%;height:6px;background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 100%);border-radius:50%;filter:blur(.5px)}
+
+h1.book-title{font-family:var(--font-serif);font-size:2.4em;color:var(--heading);margin-bottom:5px;line-height:1.2}
+h2.section-title{font-family:var(--font);font-size:1.3em;color:var(--heading);font-weight:800;margin:20px 0 12px;padding:8px 14px;border-radius:10px;background:linear-gradient(135deg,rgba(21,101,192,.08),rgba(21,101,192,.02));border-left:4px solid var(--accent);display:flex;align-items:center;gap:8px;letter-spacing:.3px}
+h2.section-title i{font-size:.85em;opacity:.7}
+h3.sub-title{font-size:1.05em;color:var(--accent2);font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+h3.sub-title::before{content:'';width:4px;height:100%;min-height:18px;background:var(--accent2);border-radius:2px;display:inline-block}
+
+.def-box{background:linear-gradient(135deg,rgba(21,101,192,.06),rgba(21,101,192,.02));border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 12px 12px 0;margin:12px 0;transition:transform .2s,box-shadow .2s}
+.def-box:hover{transform:translateX(4px);box-shadow:0 2px 12px rgba(21,101,192,.1)}
+.formula-box{border:2px solid rgba(21,101,192,.2);padding:16px;border-radius:14px;text-align:center;margin:14px 0;background:linear-gradient(135deg,rgba(21,101,192,.04),transparent);backdrop-filter:blur(2px)}
+.warning-box{background:linear-gradient(135deg,rgba(255,107,107,.06),rgba(255,107,107,.02));border-left:4px solid var(--accent2);padding:14px 18px;border-radius:0 12px 12px 0;margin:12px 0;font-weight:600;transition:transform .2s}
+.warning-box:hover{transform:translateX(4px)}
+.note-box{background:linear-gradient(135deg,rgba(0,201,167,.06),rgba(0,201,167,.02));border-left:4px solid var(--accent3);padding:14px 18px;border-radius:0 12px 12px 0;margin:12px 0;transition:transform .2s}
+.note-box:hover{transform:translateX(4px)}
+.gold-box{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.02));border-left:4px solid var(--gold);padding:14px 18px;border-radius:0 12px 12px 0;margin:12px 0;transition:transform .2s}
+.gold-box:hover{transform:translateX(4px)}
+
+.example-box{background:linear-gradient(135deg,rgba(39,174,96,.06),rgba(39,174,96,.02));border-left:4px solid #27ae60;padding:14px 18px;border-radius:0 12px 12px 0;margin:12px 0;transition:transform .2s}
+.example-box:hover{transform:translateX(4px)}
+
+table.spec-table{width:100%;border-collapse:separate;border-spacing:0;margin:14px 0;font-size:.88em;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+table.spec-table th{background:linear-gradient(135deg,var(--accent),#1976d2);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:.85em;letter-spacing:.3px}
+table.spec-table td{padding:9px 12px;border-bottom:1px solid rgba(0,0,0,.05)}
+table.spec-table tr:nth-child(even){background:rgba(21,101,192,.03)}
+table.spec-table tr:hover{background:rgba(21,101,192,.06)}
+
+.cover-page{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(160deg,#0a1628 0%,#1a2a4a 30%,#1565c0 60%,#0d47a1 100%)!important;color:#fff!important;background-image:none!important;position:relative;overflow:hidden}
+.cover-page::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Cpath d='M0,100 Q50,50 100,100 T200,100 T300,100 T400,100' fill='none' stroke='rgba(255,255,255,.06)' stroke-width='2'/%3E%3Cpath d='M0,120 Q50,70 100,120 T200,120 T300,120 T400,120' fill='none' stroke='rgba(255,255,255,.04)' stroke-width='2'/%3E%3C/svg%3E") repeat;background-size:400px 200px;animation:waveScroll 8s linear infinite;opacity:.8}
+@keyframes waveScroll{0%{background-position:0 0}100%{background-position:400px 0}}
+.cover-page::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,rgba(10,22,40,.6));pointer-events:none}
+.cover-page h1{color:#fff;font-size:2.8em;text-shadow:0 3px 20px rgba(0,0,0,.4);position:relative;z-index:1}
+.cover-page .subtitle{font-size:1.3em;opacity:.9;margin:6px 0 20px;border-bottom:2px solid rgba(255,255,255,.3);padding-bottom:8px;display:inline-block;position:relative;z-index:1;letter-spacing:1px}
+.cover-page .badge{background:rgba(255,255,255,.1);padding:10px 28px;border-radius:25px;font-weight:600;margin:15px 0;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);position:relative;z-index:1;transition:transform .3s}
+.cover-page .badge:hover{transform:scale(1.05)}
+.cover-page .author{margin-top:30px;font-size:.95em;opacity:.7;position:relative;z-index:1}
+.cover-wave{font-size:5em;margin-bottom:15px;opacity:.9;position:relative;z-index:1;animation:coverFloat 3s ease-in-out infinite}
+@keyframes coverFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.img-frame{margin:12px 0;border-radius:10px;overflow:hidden;border:2px solid var(--accent);box-shadow:0 3px 12px rgba(0,0,0,.1)}
+.img-frame img{width:100%;display:block}
+.img-caption{font-size:.75em;text-align:center;color:var(--accent);font-style:italic;margin-top:4px}
+
+.sim-container{background:var(--page-bg);border:2px solid var(--accent);border-radius:10px;padding:12px;margin:12px 0;position:relative}
+.sim-container iframe{width:100%;height:400px;border:none;border-radius:6px}
+.sim-expand-btn{position:absolute;top:6px;right:6px;width:38px;height:38px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--accent),#1976d2);color:#fff;font-size:16px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(21,101,192,.4);transition:all .25s;opacity:.85}
+.sim-expand-btn:hover{opacity:1;transform:scale(1.1);box-shadow:0 5px 20px rgba(21,101,192,.6)}
+#sim-fullscreen-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:5000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#sim-fullscreen-modal.open{display:flex;animation:simModalIn .35s ease}
+@keyframes simModalIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+#sim-fullscreen-modal .sim-modal-header{display:flex;align-items:center;justify-content:space-between;width:min(95vw,1200px);margin-bottom:12px;color:#fff}
+#sim-fullscreen-modal .sim-modal-header h3{font-family:var(--font);font-weight:700;font-size:1.1em;display:flex;align-items:center;gap:8px}
+#sim-fullscreen-modal .sim-modal-close{width:42px;height:42px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(5px)}
+#sim-fullscreen-modal .sim-modal-close:hover{background:rgba(239,83,80,.8);border-color:rgba(239,83,80,.6);transform:scale(1.1)}
+#sim-fullscreen-modal iframe{width:min(95vw,1200px);height:calc(100vh - 120px);border:none;border-radius:14px;box-shadow:0 12px 60px rgba(0,0,0,.5);background:#fff}
+
+#nav-bar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:8px 16px;background:var(--nav-bg);border-radius:50px;box-shadow:0 8px 40px rgba(0,0,0,.18);backdrop-filter:blur(20px);z-index:1000;align-items:center;border:1px solid rgba(255,255,255,.12)}
+.nav-btn{width:44px;height:44px;border-radius:50%;border:none;background:linear-gradient(145deg,var(--accent),#1976d2);color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;position:relative;overflow:hidden}
+.nav-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);border-radius:50%;opacity:0;transition:opacity .2s}
+.nav-btn:hover{transform:scale(1.12) translateY(-2px);box-shadow:0 6px 20px rgba(21,101,192,.45)}
+.nav-btn:hover::after{opacity:1}
+.nav-btn:active{transform:scale(.95)}
+.nav-btn:disabled{opacity:.25;cursor:not-allowed;transform:none;box-shadow:none}
+
+#toc-modal{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center}
+#toc-modal.show{display:flex}
+#toc-panel{background:var(--page-bg);border-radius:20px;padding:30px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1)}
+#toc-panel h2{color:var(--heading);margin-bottom:18px;font-size:1.4em;display:flex;align-items:center;gap:8px;font-weight:800}
+.toc-item{padding:12px 16px;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .25s;margin-bottom:4px;border:1px solid transparent}
+.toc-item:hover{background:linear-gradient(135deg,rgba(21,101,192,.08),rgba(21,101,192,.03));border-color:rgba(21,101,192,.15);transform:translateX(6px)}
+.toc-item .toc-num{background:linear-gradient(135deg,var(--accent),#1976d2);color:#fff;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;flex-shrink:0;box-shadow:0 2px 8px rgba(21,101,192,.25)}
+
+/* Page flip animations */
+.spread.flip-out-fwd{display:flex!important;animation:flipFwd .5s ease-in forwards;transform-origin:left center}
+.spread.flip-out-back{display:flex!important;animation:flipBack .5s ease-in forwards;transform-origin:right center}
+.spread.flip-in-fwd{display:flex!important;animation:flipInFwd .5s ease-out forwards;transform-origin:right center}
+.spread.flip-in-back{display:flex!important;animation:flipInBack .5s ease-out forwards;transform-origin:left center}
+@keyframes flipFwd{0%{transform:perspective(2000px) rotateY(0);opacity:1;filter:brightness(1)}50%{filter:brightness(.7)}100%{transform:perspective(2000px) rotateY(-100deg);opacity:0;filter:brightness(.5)}}
+@keyframes flipBack{0%{transform:perspective(2000px) rotateY(0);opacity:1;filter:brightness(1)}50%{filter:brightness(.7)}100%{transform:perspective(2000px) rotateY(100deg);opacity:0;filter:brightness(.5)}}
+@keyframes flipInFwd{0%{transform:perspective(2000px) rotateY(100deg);opacity:0;filter:brightness(.5)}50%{filter:brightness(.7)}100%{transform:perspective(2000px) rotateY(0);opacity:1;filter:brightness(1)}}
+@keyframes flipInBack{0%{transform:perspective(2000px) rotateY(-100deg);opacity:0;filter:brightness(.5)}50%{filter:brightness(.7)}100%{transform:perspective(2000px) rotateY(0);opacity:1;filter:brightness(1)}}
+
+.back-to-index{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;opacity:.5;transition:opacity .2s;z-index:5}
+.back-to-index:hover{opacity:1}
+
+/* Quiz */
+.quiz-opt{display:block;width:100%;padding:12px;margin:6px 0;border-radius:10px;border:2px solid rgba(0,0,0,.08);cursor:pointer;text-align:left;font-size:.9em;background:none;color:var(--text);font-family:var(--font);transition:all .2s}
+.quiz-opt:hover{border-color:#6366f1}
+.quiz-opt.correct{border-color:#27ae60;background:rgba(39,174,96,.1);font-weight:700}
+.quiz-opt.wrong{border-color:#e74c3c;background:rgba(231,76,60,.1)}
+
+/* Chat */
+#chat-toggle{position:fixed;bottom:80px;left:16px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;font-size:24px;cursor:grab;z-index:1001;box-shadow:0 4px 24px rgba(102,126,234,.5);transition:all .3s;overflow:hidden;padding:0;touch-action:none;user-select:none;display:flex;align-items:center;justify-content:center}
+#chat-toggle:active{cursor:grabbing}
+#chat-toggle:hover{box-shadow:0 6px 30px rgba(102,126,234,.7);transform:scale(1.05)}
+#chat-bubble{position:fixed;bottom:142px;left:12px;background:rgba(255,255,255,.95);border:1px solid rgba(102,126,234,.2);border-radius:16px;padding:10px 14px;max-width:250px;font-size:.78em;line-height:1.4;color:#333;box-shadow:0 4px 20px rgba(0,0,0,.12);z-index:1000;opacity:0;transition:opacity .4s;pointer-events:none;font-style:italic;backdrop-filter:blur(8px)}
+#chat-bubble.visible{opacity:1;pointer-events:auto}
+#chat-bubble::after{content:"";position:absolute;bottom:-8px;left:30px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid rgba(255,255,255,.95)}
+#chat-panel{position:fixed;left:16px;bottom:16px;width:400px;max-height:calc(100vh - 40px);background:rgba(255,255,255,.98);border-radius:20px;box-shadow:0 12px 60px rgba(0,0,0,.25);z-index:2001;display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(102,126,234,.15);backdrop-filter:blur(12px)}
+#chat-panel.open{display:flex;animation:chatSlide .3s ease}
+@keyframes chatSlide{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:none}}
+#chat-header{padding:10px 14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;gap:10px;flex-shrink:0}
+#chat-header .sci-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+#chat-header .sci-info{flex:1}
+#chat-header .sci-info h3{font-size:.88em;font-weight:700;margin:0}
+#chat-header .sci-info small{font-size:.65em;opacity:.8;display:block}
+#chat-header .header-actions{display:flex;gap:5px}
+#chat-header .header-actions button{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+#chat-header .header-actions button:hover{background:rgba(255,255,255,.3)}
+#chat-header .close-chat{background:none!important;font-size:14px!important;opacity:.7}
+#chat-header .close-chat:hover{opacity:1}
+#api-key-section{padding:10px 14px;text-align:center;font-size:.78em;background:linear-gradient(135deg,rgba(102,126,234,.06),rgba(118,75,162,.04));border-bottom:1px solid rgba(102,126,234,.1);flex-shrink:0}
+#api-key-section p{margin:0 0 8px;color:#555;font-weight:500}
+#api-key-section input{width:100%;padding:10px 14px;border-radius:12px;border:2px solid rgba(102,126,234,.2);font-family:'JetBrains Mono',monospace;font-size:.85em;margin:0 0 8px;outline:none;background:rgba(255,255,255,.8);color:#333;transition:border-color .2s}
+#api-key-section input:focus{border-color:#667eea}
+#api-key-section button{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:8px 24px;border-radius:12px;cursor:pointer;font-weight:700;transition:all .2s;font-size:.9em}
+#api-key-section button:hover{transform:scale(1.03);box-shadow:0 4px 15px rgba(102,126,234,.4)}
+#scientist-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);background:linear-gradient(180deg,rgba(102,126,234,.03),transparent);flex-shrink:0}
+#scientist-selector .sci-label{font-size:.52em;letter-spacing:.3px;text-transform:uppercase;opacity:.6;font-weight:700;grid-column:1/-1;margin:0;padding:0;color:#667eea}
+.sci-btn{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:8px;border:2px solid rgba(0,0,0,.06);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.6);font-size:.68em;font-weight:600;color:#444;flex-direction:row}
+.sci-btn:hover{border-color:#667eea;background:rgba(102,126,234,.06);transform:translateY(-1px)}
+.sci-btn.active{border-color:#667eea;background:linear-gradient(135deg,rgba(102,126,234,.1),rgba(118,75,162,.06));color:#333;box-shadow:0 2px 10px rgba(102,126,234,.15)}
+.sci-btn .sci-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+#chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:120px;max-height:220px;background:rgba(248,249,252,.5)}
+.msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:.85em;line-height:1.5;animation:msgIn .3s ease;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:#f0f2f5;color:#1c1e21;border-bottom-left-radius:4px}
+.msg .sci-name{font-weight:700;color:#667eea;font-size:.72em;margin-bottom:3px;display:block}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#chat-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-top:1px solid rgba(0,0,0,.04)}
+.chat-suggest{padding:6px 12px;border-radius:20px;border:1px solid rgba(102,126,234,.2);font-size:.73em;cursor:pointer;background:none;color:#555;transition:all .2s;font-family:var(--font)}
+.chat-suggest:hover{background:rgba(102,126,234,.08);border-color:#667eea;color:#333}
+.typing-dots{display:flex;gap:4px;padding:8px;align-self:flex-start}
+.td{width:6px;height:6px;border-radius:50%;background:#667eea;animation:tdb .6s infinite alternate}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes tdb{to{transform:translateY(-6px);opacity:.3}}
+#chat-input-area{padding:8px 10px;border-top:1px solid rgba(0,0,0,.06);display:flex;gap:6px;background:rgba(255,255,255,.9);flex-shrink:0}
+#chat-input{flex:1;padding:9px 16px;border-radius:24px;border:2px solid rgba(102,126,234,.15);font-size:.85em;outline:none;background:#f8f9fc;color:#333;font-family:var(--font);transition:border-color .2s}
+#chat-input:focus{border-color:#667eea}
+#chat-send{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+#chat-send:hover{transform:scale(1.1);box-shadow:0 3px 12px rgba(102,126,234,.4)}
+
+#particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.3}
+#zoom-controls{position:fixed;bottom:80px;right:16px;display:flex;flex-direction:column;gap:6px;z-index:999}
+#zoom-controls button{width:36px;height:36px;border-radius:50%;border:2px solid var(--accent);background:var(--nav-bg);color:var(--accent);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);transition:all .2s}
+#zoom-controls button:hover{background:var(--accent);color:#fff;transform:scale(1.1)}
+#zoom-level{font-size:10px;text-align:center;color:var(--text);opacity:.6;font-weight:700}
+
+#quiz-fab{position:fixed;bottom:80px;right:60px;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);border:none;color:#fff;font-size:18px;cursor:pointer;z-index:1001;box-shadow:0 4px 15px rgba(245,158,11,.4)}
+#quiz-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);z-index:3000;display:none;align-items:center;justify-content:center}
+#quiz-modal.show{display:flex}
+#quiz-panel{background:var(--page-bg);border-radius:16px;padding:28px;max-width:520px;width:90%}
+
+#narrator-btn{position:fixed;bottom:80px;right:110px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#27ae60,#2ecc71);border:none;color:#fff;font-size:18px;cursor:pointer;z-index:1001;box-shadow:0 3px 15px rgba(39,174,96,.4);transition:all .3s;display:flex;align-items:center;justify-content:center}
+#narrator-btn:hover{transform:scale(1.1)}
+#narrator-btn.speaking{background:linear-gradient(135deg,#e74c3c,#c0392b);box-shadow:0 3px 15px rgba(231,76,60,.4);animation:narratorPulse 1s infinite}
+@keyframes narratorPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+#narrator-status{position:fixed;bottom:128px;right:92px;background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:6px 14px;font-size:.75em;color:#333;box-shadow:0 2px 12px rgba(0,0,0,.1);z-index:1000;opacity:0;transition:opacity .3s;pointer-events:none;font-weight:500}
+#narrator-status.visible{opacity:1}
+
+#notes-btn{position:fixed;top:50px;right:12px;z-index:1001;background:none;border:none;font-size:18px;cursor:pointer;color:var(--heading);opacity:.7}
+#notes-panel{position:fixed;right:0;top:0;width:300px;height:100%;background:var(--page-bg);box-shadow:-5px 0 30px rgba(0,0,0,.15);z-index:2002;transform:translateX(100%);transition:transform .3s;padding:20px;overflow-y:auto}
+#notes-panel.open{transform:translateX(0)}
+#notes-panel h3{color:#6366f1;margin-bottom:12px}
+#notes-area{width:100%;height:180px;border:2px solid rgba(99,102,241,.15);border-radius:10px;padding:12px;font-family:var(--font);font-size:.85em;resize:vertical;outline:none;background:var(--page-bg);color:var(--text)}
+#reading-timer{position:fixed;top:12px;right:50px;z-index:1001;font-size:11px;color:var(--text);opacity:.5;font-weight:500}
+
+@media(max-width:768px){
+#book{width:98vw;height:85vh}
+.page{padding:20px 18px;font-size:13px}
+h1.book-title{font-size:1.8em}
+#chat-panel{width:calc(100vw - 32px);left:16px;bottom:120px;max-height:55vh}
+#notes-panel{width:100%}
+}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="dark-toggle" onclick="document.body.classList.toggle('dark')" title="Modo oscuro"><i class="fas fa-moon"></i></button>
+<button id="fullscreen-btn" onclick="toggleFS()" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+<span id="page-info"></span>
+
+<div id="book-container">
+<div id="book">
+
+<!-- SPREAD 0: Cover + TOC -->
+<div class="spread active" data-spread="0">
+<div class="page page-left cover-page">
+<svg class="cover-wave-svg" viewBox="0 0 200 50" style="position:absolute;top:60px;left:0;width:100%;height:60px;opacity:.15;z-index:0"><path d="M0,25 Q25,5 50,25 T100,25 T150,25 T200,25" fill="none" stroke="#fff" stroke-width="1.5"><animate attributeName="d" values="M0,25 Q25,5 50,25 T100,25 T150,25 T200,25;M0,25 Q25,45 50,25 T100,25 T150,25 T200,25;M0,25 Q25,5 50,25 T100,25 T150,25 T200,25" dur="4s" repeatCount="indefinite"/></path></svg>
+<div class="cover-wave" style="filter:drop-shadow(0 0 20px rgba(255,255,255,.3))">🎵</div>
+<h1 class="book-title" style="font-size:2.6em;letter-spacing:2px">TUBOS SONOROS</h1>
+<div class="subtitle">Ondas Estacionarias, Armónicos y Resonancia</div>
+<div class="badge"><i class="fas fa-atom" style="margin-right:6px"></i> Física III — Cuaderno Interactivo</div>
+<div style="display:flex;gap:12px;margin:15px 0;position:relative;z-index:1"><span style="background:rgba(255,255,255,.1);padding:6px 14px;border-radius:15px;font-size:.75em;border:1px solid rgba(255,255,255,.15)"><i class="fas fa-flask"></i> Interactivo</span><span style="background:rgba(255,255,255,.1);padding:6px 14px;border-radius:15px;font-size:.75em;border:1px solid rgba(255,255,255,.15)"><i class="fas fa-robot"></i> IA Chat</span><span style="background:rgba(255,255,255,.1);padding:6px 14px;border-radius:15px;font-size:.75em;border:1px solid rgba(255,255,255,.15)"><i class="fas fa-chart-line"></i> Simulaciones</span></div>
+<div class="author">Juan José Pérez Herrera &amp; Deisy Patricia Angarita<br><small style="opacity:.6">Universidad Tecnológica de Pereira — 2026</small></div>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right" style="padding-top:30px">
+<h2 class="section-title"><i class="fas fa-list"></i> Índice de Contenidos</h2>
+<div class="toc-item" onclick="goTo(1)"><span class="toc-num">1</span> ¿Qué son los Tubos Sonoros?</div>
+<div class="toc-item" onclick="goTo(2)"><span class="toc-num">3</span> Tubo Abierto en Ambos Extremos</div>
+<div class="toc-item" onclick="goTo(3)"><span class="toc-num">5</span> Tubo Cerrado en un Extremo</div>
+<div class="toc-item" onclick="goTo(4)"><span class="toc-num">7</span> Comparación y Casos Resueltos</div>
+<div class="toc-item" onclick="goTo(5)"><span class="toc-num">9</span> Resonancia y Aplicaciones</div>
+<div class="toc-item" onclick="goTo(6)"><span class="toc-num">11</span> Instrumentos de Viento</div>
+<div class="toc-item" onclick="goTo(7)"><span class="toc-num">13</span><i class="fas fa-gamepad" style="color:var(--accent2)"></i> Simulación: Flauta Virtual</div>
+<div class="toc-item" onclick="goTo(8)"><span class="toc-num">15</span> Ejercicios y Evaluación</div>
+<div class="toc-item" onclick="goTo(9)"><span class="toc-num">17</span> Resumen y Mapa Conceptual</div>
+<span class="page-num">ii</span>
+</div>
+</div>
+
+<!-- SPREAD 1: ¿Qué son los Tubos Sonoros? -->
+<div class="spread" data-spread="1">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-music"></i> ¿Qué son los Tubos Sonoros?</h2>
+<p>Desde la antigüedad, el ser humano ha descubierto que al soplar a través de un tubo — ya sea una caña hueca, un hueso tallado o una flauta de madera — se produce un sonido musical definido. Hoy comprendemos que la razón de este fenómeno reside en las <strong>ondas estacionarias</strong> que se forman dentro de la columna de aire confinada en el tubo.</p>
+<div class="def-box"><i class="fas fa-lightbulb"></i> Un <strong>tubo sonoro</strong> es una estructura cilíndrica que contiene una columna de gas (generalmente aire). Cuando esta columna se excita, se generan ondas sonoras longitudinales que se reflejan en los extremos y forman <strong>ondas estacionarias</strong>. El cuerpo vibrante no es el tubo en sí, sino la <strong>columna de aire</strong> en su interior.</div>
+<h3 class="sub-title">Nodos y Antinodos</h3>
+<div class="def-box"><strong style="color:var(--accent)">Nodo (N):</strong> Punto de la onda estacionaria donde la amplitud de desplazamiento es siempre cero. El aire permanece estacionario.</div>
+<div class="def-box" style="border-color:var(--accent2)"><strong style="color:var(--accent2)">Antinodo (A):</strong> Punto donde el desplazamiento del aire alcanza su valor máximo.</div>
+<div class="note-box"><i class="fas fa-info-circle"></i> <strong>Dualidad desplazamiento–presión:</strong> Donde hay un antinodo de desplazamiento, hay un nodo de presión, y viceversa. Nuestro oído detecta las variaciones de presión.</div>
+<span class="page-num">1</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<h3 class="sub-title" style="color:var(--gold)"><i class="fas fa-exchange-alt" style="color:var(--gold)"></i> Condiciones de Frontera</h3>
+<p><strong>Extremo abierto:</strong> El aire se mueve libremente → <strong>antinodo de desplazamiento</strong> y <strong>nodo de presión</strong>. La onda se refleja con inversión parcial de fase.</p>
+<p><strong>Extremo cerrado:</strong> El aire no puede desplazarse → <strong>nodo de desplazamiento</strong> y <strong>antinodo de presión</strong>.</p>
+<table class="spec-table">
+<tr><th>Propiedad</th><th>Extremo Abierto</th><th>Extremo Cerrado</th></tr>
+<tr><td>Desplazamiento</td><td>Antinodo (máximo)</td><td>Nodo (cero)</td></tr>
+<tr><td>Presión sonora</td><td>Nodo (mínimo)</td><td>Antinodo (máximo)</td></tr>
+<tr><td>Ejemplos</td><td>Boca de flauta</td><td>Lengüeta de clarinete</td></tr>
+</table>
+<h3 class="sub-title" style="color:var(--accent3)">Velocidad del Sonido</h3>
+<div class="formula-box">$$v \approx 331{,}4 + 0{,}6 \cdot T \quad [\text{m/s}]$$<p style="font-size:.85em;margin-top:6px">donde $T$ es la temperatura en °C. A 20 °C: $v \approx 343$ m/s</p></div>
+<div class="gold-box"><i class="fas fa-star"></i> <strong>Dato:</strong> Los instrumentos se «desafinan» hacia el agudo cuando el aire interior se calienta con el aliento, porque $v$ aumenta y $f = v/\lambda$ sube.</div>
+<span class="page-num">2</span>
+</div>
+</div>
+
+<!-- SPREAD 2: Tubo Abierto -->
+<div class="spread" data-spread="2">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-arrows-alt-h"></i> Tubo Abierto en Ambos Extremos</h2>
+<p>Un <strong>tubo abierto</strong> tiene ambos extremos sin obstrucción. Ambos extremos son <strong>antinodos de desplazamiento</strong>. Esta simetría permite que se produzcan <strong>todos los armónicos</strong> (pares e impares), lo que genera un timbre brillante y completo.</p>
+<p>Ejemplos: la <strong>flauta traversa</strong>, algunos tubos de órgano «labiales abiertos» y la armónica.</p>
+<div class="formula-box" style="border-color:var(--accent3)"><strong>Condición de longitud:</strong> $$L = n \cdot \frac{\lambda_n}{2} \quad (n = 1, 2, 3, \ldots)$$</div>
+<div class="formula-box"><strong style="color:var(--accent2)">Frecuencia del $n$-ésimo armónico:</strong> $$\boxed{f_n = n \cdot \frac{v}{2L}} \quad (n = 1, 2, 3, \ldots)$$<p style="font-size:.85em;margin-top:6px">Todos los armónicos: fundamental + superiores</p></div>
+<table class="spec-table">
+<tr><th>$n$</th><th>Modo</th><th>$\lambda_n$</th><th>$f_n$</th><th>Nodos</th><th>Antinodos</th></tr>
+<tr><td>1</td><td>Fundamental</td><td>$2L$</td><td>$v/(2L)$</td><td>1</td><td>2</td></tr>
+<tr><td>2</td><td>2.° armónico</td><td>$L$</td><td>$2f_1$</td><td>2</td><td>3</td></tr>
+<tr><td>3</td><td>3.° armónico</td><td>$2L/3$</td><td>$3f_1$</td><td>3</td><td>4</td></tr>
+<tr><td>4</td><td>4.° armónico</td><td>$L/2$</td><td>$4f_1$</td><td>4</td><td>5</td></tr>
+</table>
+<span class="page-num">3</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<div class="img-frame"><img src="IMAGENES/Tubo Abierto (Abierto en ambos extremos).png" alt="Modos resonantes en tubo abierto"></div>
+<p class="img-caption">Fig. 1 — Modos resonantes y armónicos en un tubo abierto-abierto: distribución de nodos (N) y antinodos (A) para los primeros 5 modos.</p>
+<h3 class="sub-title" style="color:var(--accent3)">Dualidad Desplazamiento vs. Presión</h3>
+<p>En un tubo abierto: los <strong>antinodos de desplazamiento</strong> coinciden con <strong>nodos de presión</strong>, y viceversa. Donde el aire se desplaza más, no hay acumulación neta de presión; donde no se mueve, se comprime y rarifica al máximo.</p>
+<div class="example-box"><i class="fas fa-check-circle" style="color:#27ae60"></i> <strong>Ejemplo:</strong> Una flauta con $L = 0{,}66$ m a 20 °C ($v = 343$ m/s):
+$$f_1 = \frac{343}{2 \times 0{,}66} = \frac{343}{1{,}32} \approx 259{,}8 \text{ Hz} \approx \text{Do}_4$$
+$$f_2 = 519{,}7 \text{ Hz}, \quad f_3 = 779{,}5 \text{ Hz}, \quad f_4 = 1039{,}4 \text{ Hz}$$</div>
+<span class="page-num">4</span>
+</div>
+</div>
+
+<!-- SPREAD 3: Tubo Cerrado -->
+<div class="spread" data-spread="3">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-door-closed"></i> Tubo Cerrado en un Extremo</h2>
+<p>Un <strong>tubo cerrado</strong> tiene un extremo sellado (nodo de desplazamiento) y otro abierto (antinodo). Esta asimetría produce <strong>solo armónicos impares</strong>, lo que genera un timbre oscuro y hueco.</p>
+<p>El ejemplo más representativo es el <strong>clarinete</strong>: la lengüeta simple actúa como extremo cerrado. Un tubo cerrado de longitud $L$ produce una fundamental <strong>una octava más grave</strong> que un tubo abierto de la misma longitud.</p>
+<div class="formula-box" style="border-color:var(--accent3)"><strong>Condición de longitud:</strong> $$L = (2n-1) \cdot \frac{\lambda_n}{4} \quad (n = 1, 2, 3, \ldots)$$</div>
+<div class="formula-box"><strong style="color:var(--accent2)">Frecuencia (solo armónicos impares):</strong> $$\boxed{f_n = (2n-1) \cdot \frac{v}{4L}} \quad (n = 1, 2, 3, \ldots)$$<p style="font-size:.85em;margin-top:6px">Genera la secuencia 1, 3, 5, 7, …</p></div>
+<table class="spec-table">
+<tr><th>$n$</th><th>Armónico</th><th>$(2n-1)$</th><th>$\lambda_n$</th><th>$f_n$</th></tr>
+<tr><td>1</td><td>1.° (fundamental)</td><td>1</td><td>$4L$</td><td>$v/(4L)$</td></tr>
+<tr><td>2</td><td>3.° armónico</td><td>3</td><td>$4L/3$</td><td>$3f_1$</td></tr>
+<tr><td>3</td><td>5.° armónico</td><td>5</td><td>$4L/5$</td><td>$5f_1$</td></tr>
+<tr><td>4</td><td>7.° armónico</td><td>7</td><td>$4L/7$</td><td>$7f_1$</td></tr>
+</table>
+<span class="page-num">5</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<h3 class="sub-title">Consecuencias Tímbricas</h3>
+<p>La ausencia de armónicos pares tiene consecuencias directas en el <strong>timbre</strong>. Un tubo abierto (como la flauta) produce un timbre brillante y «completo». Un tubo cerrado (como el clarinete en registro <em>chalumeau</em>) produce un timbre más oscuro, hueco y «nasal».</p>
+<div class="warning-box"><i class="fas fa-exclamation-triangle"></i> <strong>Tubos cónicos cerrados:</strong> Los instrumentos con perforación <strong>cónica</strong> (saxofón, oboe) con lengüeta se comportan como <strong>tubos abiertos</strong> y producen <strong>todos los armónicos</strong>. La conicidad compensa el cierre (descubierto por Lord Rayleigh).</div>
+<div class="example-box"><i class="fas fa-check-circle" style="color:#27ae60"></i> <strong>Ejemplo:</strong> Clarinete con $L = 0{,}60$ m, $v = 350$ m/s:
+$$f_1 = \frac{350}{4 \times 0{,}60} = 145{,}8 \text{ Hz}$$
+$$f_2 = 3f_1 = 437{,}5 \text{ Hz} \quad (3.°\text{ armónico})$$
+$$f_3 = 5f_1 = 729{,}2 \text{ Hz} \quad (5.°\text{ armónico})$$
+<p style="font-size:.85em">La octava ($2f_1$) <strong>no</strong> está presente. El músico debe «sobresopar» para saltar al 3.° armónico.</p></div>
+<div class="note-box"><i class="fas fa-info-circle"></i> <strong>Sobresoplado:</strong> En la flauta (tubo abierto), salta a la <strong>octava</strong> ($2f_1$). En el clarinete (tubo cerrado), salta al <strong>duodécimo</strong> ($3f_1$, octava + quinta). Esto se debe a la presencia o ausencia del 2.° armónico.</div>
+<span class="page-num">6</span>
+</div>
+</div>
+
+<!-- SPREAD 4: Comparación y Casos Resueltos -->
+<div class="spread" data-spread="4">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-balance-scale"></i> Comparación y Casos Resueltos</h2>
+<table class="spec-table">
+<tr><th>Propiedad</th><th>Tubo Abierto</th><th>Tubo Cerrado</th></tr>
+<tr><td>Extremos</td><td>Ambos abiertos</td><td>Uno cerrado, uno abierto</td></tr>
+<tr><td>Condición frontera</td><td>Antinodo–Antinodo</td><td>Nodo–Antinodo</td></tr>
+<tr><td>Fundamental</td><td>$f_1 = v/(2L)$</td><td>$f_1 = v/(4L)$</td></tr>
+<tr><td>Fórmula general</td><td>$f_n = nv/(2L)$</td><td>$f_n = (2n-1)v/(4L)$</td></tr>
+<tr><td>Armónicos</td><td>Todos</td><td>Solo impares</td></tr>
+<tr><td>$\lambda_1$</td><td>$2L$</td><td>$4L$</td></tr>
+<tr><td>Timbre</td><td>Brillante</td><td>Oscuro, hueco</td></tr>
+<tr><td>Instrumentos</td><td>Flauta, órgano abierto</td><td>Clarinete, órgano tapado</td></tr>
+</table>
+<div class="gold-box"><i class="fas fa-star"></i> Para un mismo $L$: la fundamental del tubo cerrado es la <strong>mitad</strong> de la del tubo abierto (una octava más grave). Los constructores de órganos aprovechan esto para ahorrar espacio.</div>
+<div class="example-box"><i class="fas fa-check-circle" style="color:#27ae60"></i> <strong>Caso 1 — Tubo abierto:</strong> $L = 1{,}50$ m, $v = 340$ m/s:
+$$f_1 = \frac{340}{3{,}00} = 113{,}3 \text{ Hz}, \quad f_2 = 226{,}7 \text{ Hz}, \quad f_3 = 340{,}0 \text{ Hz}$$
+$$\lambda_1 = 2L = 3{,}00 \text{ m}$$</div>
+<span class="page-num">7</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<div class="example-box"><i class="fas fa-check-circle" style="color:#27ae60"></i> <strong>Caso 2 — Tubo cerrado para La₃ (220 Hz):</strong>
+$$L = \frac{v}{4f_1} = \frac{343}{4 \times 220} = 0{,}390 \text{ m} = 39{,}0 \text{ cm}$$
+<p style="font-size:.85em">Un tubo abierto para la misma nota: $L = 78{,}0$ cm (el doble).</p></div>
+<div class="example-box"><i class="fas fa-check-circle" style="color:#27ae60"></i> <strong>Caso 3 — Identificar tipo de tubo:</strong> Frecuencias naturales adyacentes: 550 Hz y 650 Hz.
+$$\Delta f = 650 - 550 = 100 \text{ Hz}$$
+En un tubo cerrado: $\Delta f = 2f_1 \implies f_1 = 50$ Hz.<br>
+Verificación: armónicos = 50, 150, 250, 350, 450, <strong>550</strong>, <strong>650</strong>... ✓ (todos impares)</div>
+<div class="example-box"><i class="fas fa-check-circle" style="color:#27ae60"></i> <strong>Caso 4 — Resonancia con diapasón:</strong> $f = 384$ Hz, resonancias en $L_1 = 22{,}8$ cm y $L_2 = 68{,}3$ cm:
+$$\frac{\lambda}{2} = 68{,}3 - 22{,}8 = 45{,}5 \text{ cm} \implies \lambda = 0{,}910 \text{ m}$$
+$$v = f \cdot \lambda = 384 \times 0{,}910 = 349{,}4 \text{ m/s}$$
+Siguiente resonancia: $L_3 = 68{,}3 + 45{,}5 = 113{,}8$ cm</div>
+<h3 class="sub-title" style="color:var(--accent3)">Ejercicios Propuestos</h3>
+<p style="font-size:.88em">1. Tubo abierto de 40 cm, $v = 340$ m/s: calcular $f_1$ y $\lambda_1$.<br>
+2. Tubo cerrado con $f_1 = 170$ Hz: frecuencias del 3.° y 5.° armónico.<br>
+3. Tubo con armónicos 800 Hz y 1200 Hz consecutivos: ¿abierto o cerrado?<br>
+4. Tubo cerrado de 50 cm con helio ($v = 970$ m/s): comparar con aire.</p>
+<span class="page-num">8</span>
+</div>
+</div>
+
+<!-- SPREAD 5: Resonancia y Aplicaciones -->
+<div class="spread" data-spread="5">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-bullhorn"></i> Resonancia y Aplicaciones</h2>
+<h3 class="sub-title">Condición de Resonancia</h3>
+<p>La <strong>resonancia</strong> ocurre cuando la frecuencia de excitación coincide con una frecuencia natural de la columna de aire, produciendo amplificación máxima.</p>
+<div class="formula-box"><strong>Tubo abierto:</strong> $L = n \cdot \lambda/2$ <br><strong>Tubo cerrado:</strong> $L = (2n-1) \cdot \lambda/4$ <br>En ambos: $\lambda = v/f$</div>
+<h3 class="sub-title" style="color:var(--gold)">Experimento de la Columna de Aire</h3>
+<p>Un diapasón vibrante se coloca sobre un tubo sumergido en agua (extremo cerrado efectivo). Al ajustar la profundidad, se producen resonancias cuando $L = \lambda/4, \, 3\lambda/4, \, 5\lambda/4, \ldots$ La diferencia entre resonancias consecutivas da $\lambda/2$, y con $v = f \cdot \lambda$ se calcula la velocidad del sonido.</p>
+<h3 class="sub-title">Órganos de Tubos</h3>
+<p>Un órgano grande puede tener más de <strong>10.000 tubos</strong>. Los tubos cerrados producen una nota una octava más grave que uno abierto de la misma longitud, permitiendo ahorrar espacio. Los tubos más graves miden hasta <strong>10 metros</strong>; los más agudos, unos pocos centímetros.</p>
+<div class="note-box"><i class="fas fa-building"></i> <strong>Acústica arquitectónica:</strong> Los conductos de ventilación pueden actuar como tubos sonoros no deseados. Los ingenieros usan resonadores de Helmholtz y tubos laterales para atenuar frecuencias problemáticas.</div>
+<span class="page-num">9</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<div class="img-frame"><img src="IMAGENES/Tubos Sonoros como Instrumentos.png" alt="La física y el arte de los instrumentos de viento"></div>
+<p class="img-caption">Fig. 2 — La física y el arte de los instrumentos de viento: flauta, trompeta, clarinete, saxofón, órgano de tubos, fagot, oboe, corno francés, tuba y gaita.</p>
+<div class="def-box"><strong style="color:var(--accent)">Relación fundamental:</strong> $$v = f \cdot \lambda$$<p style="font-size:.85em">Conecta velocidad, frecuencia y longitud de onda para todas las ondas.</p></div>
+<span class="page-num">10</span>
+</div>
+</div>
+
+<!-- SPREAD 6: Instrumentos de Viento -->
+<div class="spread" data-spread="6">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-guitar"></i> Instrumentos de Viento</h2>
+<h3 class="sub-title" style="color:var(--accent)">Vientos de Madera</h3>
+<div class="def-box"><strong style="color:var(--accent)">Flauta traversa:</strong> Tubo cilíndrico abierto. Timbre brillante. Todos los armónicos. Sobresoplado → octava ($2f_1$).</div>
+<div class="def-box" style="border-color:var(--accent2)"><strong style="color:var(--accent2)">Clarinete:</strong> Tubo cilíndrico con lengüeta simple → <strong>tubo cerrado</strong>. Solo armónicos impares. Timbre cálido y oscuro. Sobresoplado → duodécimo ($3f_1$).</div>
+<div class="def-box" style="border-color:var(--accent3)"><strong style="color:var(--accent3)">Saxofón:</strong> Tubo <strong>cónico</strong> con lengüeta simple. La conicidad compensa el cierre → <strong>todos los armónicos</strong>. Timbre versátil.</div>
+<div class="def-box" style="border-color:var(--gold)"><strong style="color:var(--gold)">Oboe:</strong> Tubo cónico con lengüeta doble. Todos los armónicos. Timbre penetrante y nasal.</div>
+<p><strong>Fagot:</strong> Tubo cónico largo, lengüeta doble. Bajo de las maderas.</p>
+<h3 class="sub-title" style="color:var(--accent2)">Vientos de Metal</h3>
+<p>Usan la <strong>vibración de los labios</strong> contra una boquilla. La geometría compleja permite todos los armónicos naturales.</p>
+<div class="def-box"><strong>Trompeta:</strong> Cilíndrico con campana cónica. 3 pistones. Brillo en armónicos superiores.</div>
+<div class="def-box" style="border-color:var(--accent3)"><strong style="color:var(--accent3)">Trombón:</strong> Vara deslizante → afinación verdaderamente continua (no temperada).</div>
+<span class="page-num">11</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<div class="img-frame"><img src="IMAGENES/El Arte de la Flauta Dulce.png" alt="Digitaciones de flauta dulce soprano"></div>
+<p class="img-caption">Fig. 3 — Digitaciones avanzadas de la flauta dulce soprano, desde Sol♯4 hasta Re6.</p>
+<h3 class="sub-title" style="color:var(--accent3)">Clasificación por tipo de tubo</h3>
+<table class="spec-table">
+<tr><th>Instrumento</th><th>Tipo de tubo</th><th>Armónicos</th></tr>
+<tr><td>Flauta traversa</td><td>Abierto cilíndrico</td><td>Todos</td></tr>
+<tr><td>Flauta dulce</td><td>Abierto</td><td>Todos</td></tr>
+<tr><td>Clarinete</td><td>Cerrado cilíndrico</td><td>Solo impares</td></tr>
+<tr><td>Saxofón</td><td>Cerrado cónico</td><td>Todos</td></tr>
+<tr><td>Oboe</td><td>Cerrado cónico</td><td>Todos</td></tr>
+<tr><td>Trompeta</td><td>Mixto (campana)</td><td>Todos</td></tr>
+<tr><td>Corno francés</td><td>Cónico largo</td><td>Todos</td></tr>
+<tr><td>Tuba</td><td>Cónico grande</td><td>Todos</td></tr>
+</table>
+<span class="page-num">12</span>
+</div>
+</div>
+
+<!-- SPREAD 7: Simulación Flauta Virtual -->
+<div class="spread" data-spread="7">
+<div class="page page-left" style="padding:20px">
+<h2 class="section-title"><i class="fas fa-gamepad"></i> Simulación: Flauta Virtual Interactiva</h2>
+<p style="font-size:.85em;margin-bottom:8px">Explora cómo la flauta dulce produce diferentes notas al cubrir y descubrir sus orificios. Cada combinación modifica la <strong>longitud efectiva</strong> de la columna de aire.</p>
+<div class="sim-container">
+<button class="sim-expand-btn" onclick="openSimFullscreen()" title="Ver simulación completa"><i class="fas fa-expand-arrows-alt"></i></button>
+<iframe src="SIMULACION/Flauta_Virtual_Interactiva.html" title="Flauta Virtual Interactiva"></iframe>
+</div>
+<span class="page-num">13</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<h3 class="sub-title">Cómo funciona la flauta</h3>
+<p>La flauta dulce funciona como un <strong>tubo abierto</strong> donde la longitud efectiva de la columna de aire se modifica al cubrir o descubrir los orificios laterales.</p>
+<div class="def-box"><i class="fas fa-lightbulb"></i> <strong>Principio:</strong> Al destapar orificios → la columna de aire se <strong>acorta</strong> → la frecuencia <strong>aumenta</strong> → sonido más agudo. Al tapar → columna más larga → frecuencia más baja → sonido más grave.</div>
+<div class="note-box"><i class="fas fa-hand-pointer"></i> <strong>Instrucciones:</strong> Haz clic en los orificios de la flauta virtual para cubrirlos o descubrirlos. Observa cómo cambia la nota producida. Intenta tocar una escala musical completa.</div>
+<div class="formula-box">Para un tubo abierto de longitud efectiva $L_{ef}$: $$f = \frac{v}{2L_{ef}}$$<p style="font-size:.85em;margin-top:6px">Al abrir un orificio, $L_{ef}$ disminuye y $f$ aumenta.</p></div>
+<div class="gold-box"><i class="fas fa-music"></i> La flauta dulce es el instrumento pedagógico por excelencia. Su estudio conecta directamente la física de los tubos sonoros con la práctica musical.</div>
+<span class="page-num">14</span>
+</div>
+</div>
+
+<!-- SPREAD 8: Ejercicios y Evaluación -->
+<div class="spread" data-spread="8">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-tasks"></i> Ejercicios y Evaluación</h2>
+<div class="example-box"><strong>P1.</strong> Tubo abierto de 85 cm a 25 °C. Hallar $f_1$, $f_2$, $f_3$.<br>$v = 331{,}4 + 0{,}6(25) = 346{,}4$ m/s<br>$f_1 = 346{,}4/(2 \times 0{,}85) = 203{,}8$ Hz<br>$f_2 = 407{,}5$ Hz, $f_3 = 611{,}3$ Hz</div>
+<div class="example-box"><strong>P2.</strong> Tubo cerrado con $f_1 = 130$ Hz a 20 °C. Hallar $L$ y $f$ del 3.° armónico.<br>$L = 343{,}4/(4 \times 130) = 66{,}1$ cm<br>$f_{3°} = 3 \times 130 = 390$ Hz</div>
+<div class="example-box"><strong>P3.</strong> ¿Qué longitud de tubo abierto produce La₄ (440 Hz)?<br>$L = 343/(2 \times 440) = 39{,}0$ cm</div>
+<div class="example-box"><strong>P4.</strong> Tubo cerrado de 1,20 m con helio ($v = 970$ m/s) vs. aire:<br>Helio: $f_1 = 970/4{,}80 = 202{,}1$ Hz<br>Aire: $f_1 = 343/4{,}80 = 71{,}5$ Hz<br>Relación: $\approx 2{,}83\times$ mayor → efecto «voz de helio».</div>
+<div class="example-box"><strong>P5.</strong> Resonancias en 15, 45 y 75 cm con $f = 570$ Hz:<br>$\Delta L = 30$ cm → $\lambda = 60$ cm → $v = 570 \times 0{,}60 = 342$ m/s</div>
+<span class="page-num">15</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right">
+<h3 class="sub-title">Respuestas a ejercicios propuestos</h3>
+<p>1. $f_1 = 425$ Hz, $\lambda_1 = 0{,}80$ m<br>
+2. $f_{3°} = 510$ Hz, $f_{5°} = 850$ Hz<br>
+3. $\Delta f = 400$ Hz. Si abierto: $f_1 = 400$ Hz → armónicos 400, 800, 1200 ✓. <strong>Es tubo abierto.</strong><br>
+4. Helio: $f_1 = 485$ Hz. Aire: $f_1 = 171{,}5$ Hz.</p>
+<h3 class="sub-title" style="color:var(--gold)">Autoevaluación</h3>
+<table class="spec-table">
+<tr><th>Competencia</th><th>Descripción</th><th>✓</th></tr>
+<tr><td>Conceptual</td><td>Distingo nodos de antinodos</td><td>☐</td></tr>
+<tr><td>Conceptual</td><td>Comprendo dualidad desplazamiento–presión</td><td>☐</td></tr>
+<tr><td>Procedimental</td><td>Aplico $f_n = nv/(2L)$ (abierto)</td><td>☐</td></tr>
+<tr><td>Procedimental</td><td>Aplico $f_n = (2n-1)v/(4L)$ (cerrado)</td><td>☐</td></tr>
+<tr><td>Analítica</td><td>Identifico tipo de tubo por espectro</td><td>☐</td></tr>
+<tr><td>Aplicada</td><td>Explico instrumentos como tubos sonoros</td><td>☐</td></tr>
+<tr><td>Aplicada</td><td>Diseño un tubo para frecuencia específica</td><td>☐</td></tr>
+</table>
+<span class="page-num">16</span>
+</div>
+</div>
+
+<!-- SPREAD 9: Resumen y Mapa Conceptual -->
+<div class="spread" data-spread="9">
+<div class="page page-left">
+<h2 class="section-title"><i class="fas fa-map"></i> Resumen y Fórmulas</h2>
+<table class="spec-table">
+<tr><th>Concepto</th><th>Fórmula</th></tr>
+<tr><td>Ecuación de onda</td><td>$v = f \cdot \lambda$</td></tr>
+<tr><td>Velocidad del sonido</td><td>$v \approx 331{,}4 + 0{,}6T$</td></tr>
+<tr><td>Tubo abierto</td><td>$f_n = nv/(2L)$</td></tr>
+<tr><td>Tubo abierto — $\lambda$</td><td>$\lambda_n = 2L/n$</td></tr>
+<tr><td>Tubo cerrado</td><td>$f_n = (2n-1)v/(4L)$</td></tr>
+<tr><td>Tubo cerrado — $\lambda$</td><td>$\lambda_n = 4L/(2n-1)$</td></tr>
+<tr><td>$\Delta f$ abierto (adyacentes)</td><td>$\Delta f = f_1 = v/(2L)$</td></tr>
+<tr><td>$\Delta f$ cerrado (adyacentes)</td><td>$\Delta f = 2f_1 = v/(2L)$</td></tr>
+</table>
+<h3 class="sub-title" style="color:var(--accent3)">Glosario</h3>
+<div class="def-box" style="font-size:.88em"><strong>Antinodo:</strong> Punto de amplitud máxima en una onda estacionaria.<br><strong>Armónico:</strong> Frecuencia natural de vibración del sistema.<br><strong>Frecuencia fundamental:</strong> La menor frecuencia de resonancia.<br><strong>Nodo:</strong> Punto de amplitud cero permanente.<br><strong>Onda estacionaria:</strong> Superposición de ondas en sentidos opuestos.<br><strong>Resonancia:</strong> Amplificación máxima a frecuencia natural.<br><strong>Sobresoplado:</strong> Salto a un armónico superior.<br><strong>Timbre:</strong> Cualidad que distingue instrumentos (espectro de armónicos).</div>
+<span class="page-num">17</span>
+</div>
+<div class="spiral"><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div></div>
+<div class="page page-right cover-page" style="background:linear-gradient(160deg,#0d4a6b,#1a7bb5)!important">
+<div class="cover-wave" style="font-size:3em">🎵</div>
+<h1 class="book-title" style="font-size:1.8em;color:#fff">Fin del Cuaderno</h1>
+<p style="color:rgba(255,255,255,.8);margin:10px 0">"La música es la aritmética de los sonidos, como la óptica es la geometría de la luz" — Claude Debussy</p>
+<p style="color:rgba(255,255,255,.6);font-size:.85em;margin-top:20px">Juan José Pérez Herrera &amp; Deisy Patricia Angarita<br>Universidad Tecnológica de Pereira — 2026</p>
+<p style="color:rgba(255,255,255,.4);font-size:.75em;margin-top:12px">Edición digital interactiva</p>
+<span class="page-num" style="color:rgba(255,255,255,.3)">18</span>
+</div>
+</div>
+
+</div><!-- end #book -->
+</div><!-- end #book-container -->
+
+<!-- NAV BAR -->
+<div id="nav-bar">
+<button class="nav-btn" onclick="goTo(0)" title="Índice" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"><i class="fas fa-book-open"></i></button>
+<button class="nav-btn" onclick="goTo(0)" title="Portada"><i class="fas fa-home"></i></button>
+<button class="nav-btn" id="btn-prev" onclick="prev()" title="Anterior"><i class="fas fa-chevron-left"></i></button>
+<button class="nav-btn" id="btn-next" onclick="next()" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
+<button class="nav-btn" onclick="toggleTOC()" title="Índice"><i class="fas fa-list"></i></button>
+</div>
+
+<!-- TOC MODAL -->
+<div id="toc-modal" onclick="if(event.target===this)toggleTOC()">
+<div id="toc-panel">
+<h2><i class="fas fa-list"></i> Índice de Contenidos</h2>
+<div class="toc-item" onclick="goTo(0)"><span class="toc-num">0</span> Portada</div>
+<div class="toc-item" onclick="goTo(1)"><span class="toc-num">1</span> ¿Qué son los Tubos Sonoros?</div>
+<div class="toc-item" onclick="goTo(2)"><span class="toc-num">3</span> Tubo Abierto en Ambos Extremos</div>
+<div class="toc-item" onclick="goTo(3)"><span class="toc-num">5</span> Tubo Cerrado en un Extremo</div>
+<div class="toc-item" onclick="goTo(4)"><span class="toc-num">7</span> Comparación y Casos Resueltos</div>
+<div class="toc-item" onclick="goTo(5)"><span class="toc-num">9</span> Resonancia y Aplicaciones</div>
+<div class="toc-item" onclick="goTo(6)"><span class="toc-num">11</span> Instrumentos de Viento</div>
+<div class="toc-item" onclick="goTo(7)"><span class="toc-num">13</span><i class="fas fa-gamepad" style="color:var(--accent2)"></i> Simulación: Flauta Virtual</div>
+<div class="toc-item" onclick="goTo(8)"><span class="toc-num">15</span> Ejercicios y Evaluación</div>
+<div class="toc-item" onclick="goTo(9)"><span class="toc-num">17</span> Resumen y Mapa Conceptual</div>
+</div>
+</div>
+
+<!-- NARRATOR -->
+<button id="narrator-btn" onclick="toggleNarrator()" title="Narrador"><i class="fas fa-volume-up"></i></button>
+<div id="narrator-status"></div>
+
+<!-- PARTICLES -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ZOOM -->
+<div id="zoom-controls">
+<button onclick="zoomIn()" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+<button onclick="zoomOut()" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+<div id="zoom-level">100%</div>
+<button onclick="zoomReset()" title="Reset"><i class="fas fa-compress"></i></button>
+</div>
+
+<!-- READING TIMER -->
+<span id="reading-timer"><i class="fas fa-clock"></i> 0:00</span>
+
+<!-- NOTES -->
+<button id="notes-btn" onclick="document.getElementById('notes-panel').classList.toggle('open')" title="Notas"><i class="fas fa-sticky-note"></i></button>
+<div id="notes-panel">
+<h3><i class="fas fa-sticky-note"></i> Mis Notas</h3>
+<p style="font-size:.8em;color:var(--text);opacity:.6;margin-bottom:8px">Escribe apuntes sobre esta página.</p>
+<textarea id="notes-area" placeholder="Escribe tus notas aquí..."></textarea>
+<button onclick="saveNote()" style="margin-top:8px;background:#6366f1;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;width:100%"><i class="fas fa-save"></i> Guardar nota</button>
+<div id="saved-notes" style="margin-top:12px"></div>
+</div>
+
+<!-- QUIZ FAB -->
+<button id="quiz-fab" onclick="openQuiz()" title="Quiz Rápido"><i class="fas fa-question"></i></button>
+<div id="quiz-modal" onclick="if(event.target===this)this.classList.remove('show')">
+<div id="quiz-panel">
+<h2><i class="fas fa-brain"></i> Quiz Rápido — Tubos Sonoros</h2>
+<div id="quiz-content"></div>
+<div id="quiz-result" style="margin-top:12px;padding:10px;border-radius:8px;font-weight:600;text-align:center;display:none"></div>
+<button onclick="openQuiz()" style="margin-top:10px;background:#6366f1;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;display:none" id="quiz-next"><i class="fas fa-redo"></i> Otra pregunta</button>
+</div>
+</div>
+
+<!-- SIM FULLSCREEN MODAL -->
+<div id="sim-fullscreen-modal" onclick="if(event.target===this)closeSimFullscreen()">
+<div class="sim-modal-header">
+<h3><i class="fas fa-gamepad"></i> Flauta Virtual Interactiva — Vista Completa</h3>
+<button class="sim-modal-close" onclick="closeSimFullscreen()" title="Cerrar"><i class="fas fa-times"></i></button>
+</div>
+<iframe id="sim-fullscreen-iframe" src="" title="Flauta Virtual Interactiva"></iframe>
+</div>
+
+<!-- CHATBOT -->
+<div id="chat-bubble"></div>
+<button id="chat-toggle"><i class="fas fa-comments"></i></button>
+<div id="chat-panel">
+<div id="chat-header">
+<div class="sci-avatar" id="header-avatar">🔬</div>
+<div class="sci-info"><h3 id="header-name">Hermann von Helmholtz</h3><small id="header-role">Tutor IA de Acústica</small></div>
+<div class="header-actions">
+<button title="Nuevo" onclick="chatHistory=[];document.getElementById('chat-messages').innerHTML=''"><i class="fas fa-plus"></i></button>
+<button title="Limpiar" onclick="document.getElementById('chat-messages').innerHTML=''"><i class="fas fa-eraser"></i></button>
+<button class="close-chat" onclick="document.getElementById('chat-panel').classList.remove('open')"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div id="api-key-section">
+<p><i class="fas fa-key" style="color:#667eea"></i> <strong>API Key de Gemini 2.5 Flash</strong></p>
+<input type="text" id="gemini-key" placeholder="Pega tu API Key (AIza...)" autocomplete="off" spellcheck="false">
+<button onclick="activateChat()"><i class="fas fa-bolt"></i> Conectar</button>
+<p id="key-status" style="margin-top:6px;font-size:.8em"></p>
+</div>
+<div id="scientist-selector">
+<span class="sci-label"><i class="fas fa-user-graduate"></i> Elige tu tutor científico</span>
+<button class="sci-btn active" onclick="selectSci(0,this)" title="Acústica y resonancia"><span class="sci-icon" style="background:#d6eaff">🔬</span>Helmholtz</button>
+<button class="sci-btn" onclick="selectSci(1,this)" title="Acústica y tubos"><span class="sci-icon" style="background:#fff3cd">🌊</span>Rayleigh</button>
+<button class="sci-btn" onclick="selectSci(2,this)" title="Ondas sonoras"><span class="sci-icon" style="background:#fde2e2">🎵</span>Chladni</button>
+<button class="sci-btn" onclick="selectSci(3,this)" title="Series de Fourier"><span class="sci-icon" style="background:#d4f5e2">📊</span>Fourier</button>
+<button class="sci-btn" onclick="selectSci(4,this)" title="Efecto Doppler"><span class="sci-icon" style="background:#ffe0e0">🚑</span>Doppler</button>
+<button class="sci-btn" onclick="selectSci(5,this)" title="Ondas estacionarias"><span class="sci-icon" style="background:#e8e0f0">🎻</span>Melde</button>
+</div>
+<div id="chat-messages">
+<div class="msg bot"><span class="sci-name">🔬 Hermann von Helmholtz</span>¡Hola! Conecta tu API Key de Gemini arriba para empezar a chatear sobre tubos sonoros y acústica. 🎵</div>
+</div>
+<div id="chat-suggestions">
+<button class="chat-suggest" onclick="askSuggestion(this)">¿Qué es un tubo sonoro?</button>
+<button class="chat-suggest" onclick="askSuggestion(this)">Tubo abierto vs cerrado</button>
+<button class="chat-suggest" onclick="askSuggestion(this)">¿Por qué el clarinete suena diferente?</button>
+<button class="chat-suggest" onclick="askSuggestion(this)">Armónicos impares</button>
+</div>
+<div id="chat-input-area">
+<input id="chat-input" placeholder="Pregunta sobre tubos sonoros..." onkeydown="if(event.key==='Enter')sendChat()">
+<button id="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+</div>
+</div>
+
+<script>
+// ========== NAVIGATION ==========
+const spreads=document.querySelectorAll('.spread');
+const totalSpreads=spreads.length;
+let current=0;
+
+function updateUI(){
+spreads.forEach((s,i)=>{s.classList.remove('active','flip-out-fwd','flip-out-back','flip-in-fwd','flip-in-back');s.style.display=(i===current)?'flex':'none';if(i===current)s.classList.add('active')});
+document.getElementById('btn-prev').disabled=current===0;
+document.getElementById('btn-next').disabled=current===totalSpreads-1;
+document.getElementById('progress-bar').style.width=((current)/(totalSpreads-1)*100)+'%';
+document.getElementById('page-info').textContent=`Página ${current*2+1}-${current*2+2} de ${totalSpreads*2}`;
+if(typeof MathJax!=='undefined'&&MathJax.typesetPromise){MathJax.typesetPromise([spreads[current]]).catch(()=>{})}
+}
+
+let flipping=false;
+function goTo(idx){
+if(idx<0||idx>=totalSpreads||idx===current||flipping)return;
+flipping=true;
+const fwd=idx>current;const oldS=spreads[current];const newS=spreads[idx];
+spreads.forEach(s=>s.classList.remove('active','flip-out-fwd','flip-out-back','flip-in-fwd','flip-in-back'));
+oldS.style.display='flex';oldS.classList.add(fwd?'flip-out-fwd':'flip-out-back');
+setTimeout(()=>{
+oldS.style.display='none';oldS.classList.remove('flip-out-fwd','flip-out-back');
+newS.style.display='flex';newS.classList.add(fwd?'flip-in-fwd':'flip-in-back');
+current=idx;
+setTimeout(()=>{newS.classList.remove('flip-in-fwd','flip-in-back');updateUI();flipping=false},500);
+},420);
+closeTOC();
+}
+function next(){goTo(current+1)}
+function prev(){goTo(current-1)}
+
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();else if(e.key==='ArrowLeft')prev();else if(e.key==='Escape')closeTOC()});
+function toggleTOC(){document.getElementById('toc-modal').classList.toggle('show')}
+function closeTOC(){document.getElementById('toc-modal').classList.remove('show')}
+function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()}
+updateUI();
+
+// ========== ZOOM ==========
+let zoomLevel=1;
+function zoomIn(){zoomLevel=Math.min(zoomLevel+.15,2.5);applyZoom()}
+function zoomOut(){zoomLevel=Math.max(zoomLevel-.15,.5);applyZoom()}
+function zoomReset(){zoomLevel=1;applyZoom()}
+function applyZoom(){document.getElementById('book').style.transform='scale('+zoomLevel+')';document.getElementById('book').style.transformOrigin='center center';document.getElementById('zoom-level').textContent=Math.round(zoomLevel*100)+'%'}
+document.getElementById('book-container').addEventListener('wheel',function(e){if(e.ctrlKey){e.preventDefault();e.deltaY<0?zoomIn():zoomOut()}},{passive:false});
+
+// ========== PARTICLES ==========
+(function(){const pc=document.getElementById('particles-canvas');if(!pc)return;const pctx=pc.getContext('2d');function resizeP(){pc.width=window.innerWidth;pc.height=window.innerHeight}resizeP();window.addEventListener('resize',resizeP);const pts=[];for(let i=0;i<60;i++)pts.push({x:Math.random()*pc.width,y:Math.random()*pc.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1,o:Math.random()*.4+.1});function drawP(){pctx.clearRect(0,0,pc.width,pc.height);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=pc.width;if(p.x>pc.width)p.x=0;if(p.y<0)p.y=pc.height;if(p.y>pc.height)p.y=0;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,Math.PI*2);pctx.fillStyle='rgba(99,102,241,'+p.o+')';pctx.fill()});pctx.beginPath();pctx.strokeStyle='rgba(99,102,241,0.06)';pctx.lineWidth=1.5;var t=Date.now()/2000;for(var x=0;x<pc.width;x+=3){var y=pc.height/2+Math.sin(x*.01+t)*80+Math.sin(x*.005+t*.7)*40;x===0?pctx.moveTo(x,y):pctx.lineTo(x,y)}pctx.stroke();requestAnimationFrame(drawP)}drawP()})();
+
+// ========== READING TIMER ==========
+var readingSec=0;
+setInterval(function(){readingSec++;var m=Math.floor(readingSec/60),s=readingSec%60;document.getElementById('reading-timer').innerHTML='<i class="fas fa-clock"></i> '+m+':'+(s<10?'0':'')+s},1000);
+
+// ========== NOTES ==========
+function saveNote(){var text=document.getElementById('notes-area').value.trim();if(!text)return;var notes=JSON.parse(localStorage.getItem('tubos-notes')||'[]');notes.push({text:text,page:current,time:new Date().toLocaleString()});localStorage.setItem('tubos-notes',JSON.stringify(notes));document.getElementById('notes-area').value='';renderNotes()}
+function renderNotes(){var notes=JSON.parse(localStorage.getItem('tubos-notes')||'[]');var html='';notes.forEach(function(n,i){html+='<div style="padding:8px;margin:4px 0;border-radius:8px;background:rgba(99,102,241,.05);font-size:.82em"><div style="display:flex;justify-content:space-between"><span>'+n.text.substring(0,100)+'</span><button onclick="deleteNote('+i+')" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:11px">×</button></div><small style="opacity:.5">Pág '+(n.page*2+1)+' | '+n.time+'</small></div>'});document.getElementById('saved-notes').innerHTML=html}
+function deleteNote(i){var notes=JSON.parse(localStorage.getItem('tubos-notes')||'[]');notes.splice(i,1);localStorage.setItem('tubos-notes',JSON.stringify(notes));renderNotes()}
+renderNotes();
+
+// ========== QUIZ ==========
+var quizData=[
+{q:'En un tubo abierto, los extremos constituyen siempre:',opts:['Nodos de desplazamiento','Antinodos de desplazamiento','Nodos de presión y desplazamiento','Puntos sin condición definida'],ans:1},
+{q:'La frecuencia fundamental de un tubo cerrado de longitud L es:',opts:['v/(2L)','v/(4L)','2v/L','4v/L'],ans:1},
+{q:'Un tubo cerrado solo produce armónicos:',opts:['Pares','Impares','Todos','Solo la fundamental'],ans:1},
+{q:'Si un tubo abierto de longitud L produce f₁ = 400 Hz, un tubo cerrado de la misma L produce:',opts:['800 Hz','400 Hz','200 Hz','100 Hz'],ans:2},
+{q:'En un nodo de desplazamiento, la presión:',opts:['Es cero','Oscila al máximo (antinodo de presión)','No varía','Se duplica'],ans:1},
+{q:'El clarinete es un tubo cerrado cilíndrico porque:',opts:['Su campana es cónica','La lengüeta cierra un extremo y el tubo es cilíndrico','Ambos extremos están cerrados','Tiene orificios laterales'],ans:1},
+{q:'El saxofón produce todos los armónicos a pesar de tener lengüeta porque:',opts:['Está hecho de metal','Usa lengüeta doble','Su perforación cónica compensa el cierre','Tiene más orificios'],ans:2},
+{q:'Un tubo produce frecuencias de 300 Hz y 500 Hz adyacentes. El tubo es:',opts:['Cerrado, f₁ = 100 Hz','Abierto, f₁ = 100 Hz','Cerrado, f₁ = 200 Hz','Abierto, f₁ = 200 Hz'],ans:0}
+];
+var currentQuiz=null;
+function openQuiz(){var qi=Math.floor(Math.random()*quizData.length);currentQuiz=quizData[qi];var html='<p style="font-size:1.05em;font-weight:600;margin-bottom:12px">'+currentQuiz.q+'</p>';currentQuiz.opts.forEach(function(opt,i){html+='<button class="quiz-opt" onclick="checkQuizAnswer('+i+',this)">'+opt+'</button>'});document.getElementById('quiz-content').innerHTML=html;document.getElementById('quiz-result').style.display='none';document.getElementById('quiz-next').style.display='none';document.getElementById('quiz-modal').classList.add('show')}
+function checkQuizAnswer(idx,btn){var btns=document.querySelectorAll('.quiz-opt');btns.forEach(function(b){b.disabled=true});btns[currentQuiz.ans].classList.add('correct');var res=document.getElementById('quiz-result');if(idx===currentQuiz.ans){res.textContent='¡Correcto! ¡Excelente!';res.style.background='rgba(39,174,96,.1)';res.style.color='#27ae60'}else{btn.classList.add('wrong');res.textContent='Incorrecto. Respuesta correcta: '+currentQuiz.opts[currentQuiz.ans];res.style.background='rgba(231,76,60,.1)';res.style.color='#e74c3c'}res.style.display='block';document.getElementById('quiz-next').style.display='block'}
+
+// ========== CHATBOT — GEMINI 2.5 FLASH ==========
+var geminiKey='';
+var selectedSci=0;
+var scientists=[
+{name:'Hermann von Helmholtz',style:'Experto en acústica y resonancia. Habla sobre resonadores, timbre y análisis de sonido con rigor científico.',quotes:['Los resonadores que llevan mi nombre descomponen el sonido en sus armónicos.','El timbre depende del espectro de armónicos presentes.','La sensación de consonancia tiene base física.']},
+{name:'Lord Rayleigh',style:'Teórico de la acústica. Explica tubos cónicos, ondas estacionarias y difracción sonora con elegancia matemática.',quotes:['Las vibraciones de columnas de aire obedecen a leyes precisas.','Mi Theory of Sound abarca todos los fenómenos acústicos.','Los tubos cónicos cerrados se comportan como tubos abiertos.']},
+{name:'Ernst Chladni',style:'Padre de la acústica. Habla sobre patrones de vibración, placas vibrantes y frecuencias con entusiasmo experimental.',quotes:['Mis figuras de arena revelan los modos de vibración.','El sonido es vibración ordenada.','Cada frecuencia tiene su propia geometría.']},
+{name:'Joseph Fourier',style:'Matemático elegante. Explica series armónicas y descomposición de funciones periódicas con precisión.',quotes:['Cualquier función periódica es suma de senos y cosenos.','Mis series son la base del análisis armónico.','El calor obedece a leyes matemáticas precisas.']},
+{name:'Christian Doppler',style:'Explica cambios de frecuencia por movimiento relativo con entusiasmo. Conecta sonido y luz.',quotes:['La frecuencia cambia cuando la fuente se mueve.','Mi efecto se aplica al sonido y a la luz.','El color de las estrellas revela su movimiento.']},
+{name:'Franz Melde',style:'Experimentalista de ondas estacionarias. Habla sobre cuerdas vibrantes, nodos y armónicos con pasión pedagógica.',quotes:['Mis experimentos con cuerdas vibrantes muestran los nodos claramente.','Las ondas estacionarias son la base de toda la música.','Cada armónico divide la cuerda en segmentos iguales.']}
+];
+var chatHistory=[];
+
+function selectSci(idx,btn){selectedSci=idx;document.querySelectorAll('.sci-btn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');var hn=document.getElementById('header-name');if(hn)hn.textContent=scientists[idx].name;var msgs=document.getElementById('chat-messages');var q=scientists[idx].quotes[Math.floor(Math.random()*scientists[idx].quotes.length)];msgs.innerHTML+='<div class="msg bot"><span class="sci-name">'+scientists[idx].name+'</span>\u00AB'+q+'\u00BB ¡Pregúntame lo que quieras sobre tubos sonoros!</div>';msgs.scrollTop=msgs.scrollHeight}
+
+function activateChat(){var keyInput=document.getElementById('gemini-key');geminiKey=keyInput.value.trim();var status=document.getElementById('key-status');if(geminiKey&&geminiKey.length>10){status.innerHTML='<span style="color:#27ae60"><i class="fas fa-check-circle"></i> Conectado a Gemini 2.5 Flash</span>';keyInput.style.borderColor='#27ae60';keyInput.type='password';localStorage.setItem('gemini-key-tubos',geminiKey);var msgs=document.getElementById('chat-messages');msgs.innerHTML+='<div class="msg bot"><span class="sci-name"><i class="fas fa-bolt" style="color:#667eea"></i> Sistema</span><i class="fas fa-check-circle" style="color:#27ae60"></i> Gemini 2.5 Flash conectado. ¡Ya puedes preguntar!</div>';msgs.scrollTop=msgs.scrollHeight}else{status.innerHTML='<span style="color:#e74c3c"><i class="fas fa-times-circle"></i> Pega tu API Key completa.</span>';keyInput.style.borderColor='#e74c3c';geminiKey=null}}
+
+// Auto-load saved key
+(function(){var savedKey=localStorage.getItem('gemini-key-tubos');if(savedKey&&savedKey.length>10){geminiKey=savedKey;var ki=document.getElementById('gemini-key');if(ki){ki.value=savedKey;ki.type='password';ki.style.borderColor='#27ae60'}var ks=document.getElementById('key-status');if(ks)ks.innerHTML='<span style="color:#27ae60"><i class="fas fa-check-circle"></i> Conectado (key guardada)</span>'}})();
+
+async function sendChat(){var input=document.getElementById('chat-input');var text=input.value.trim();if(!text)return;input.value='';var msgs=document.getElementById('chat-messages');msgs.innerHTML+='<div class="msg user">'+text+'</div>';msgs.innerHTML+='<div class="typing-dots" id="typing"><span class="td"></span><span class="td"></span><span class="td"></span></div>';msgs.scrollTop=msgs.scrollHeight;var sci=scientists[selectedSci];if(!geminiKey){var el=document.getElementById('typing');if(el)el.remove();msgs.innerHTML+='<div class="msg bot"><span class="sci-name">Sistema</span><i class="fas fa-lock" style="color:#e74c3c"></i> Ingresa tu API Key de Gemini arriba.</div>';msgs.scrollTop=msgs.scrollHeight;return}
+try{var systemPrompt='Eres '+sci.name+', el famoso científico. '+sci.style+' Responde preguntas sobre tubos sonoros, acústica, ondas estacionarias, armónicos, resonancia e instrumentos musicales. Responde en español de forma clara, detallada y didáctica. Tus respuestas deben ser completas y extensas (mínimo 4-5 párrafos). Incluye ejemplos concretos, analogías de la vida real, datos históricos interesantes y el contexto físico-matemático. Si mencionas fórmulas, escríbelas en texto plano (ej: f_n = n*v/(2L)). Explica paso a paso.';chatHistory.push({role:'user',parts:[{text:text}]});var body={system_instruction:{parts:[{text:systemPrompt}]},contents:chatHistory,generationConfig:{maxOutputTokens:2000,temperature:0.85}};var resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+geminiKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});var data=await resp.json();var el=document.getElementById('typing');if(el)el.remove();if(data.candidates&&data.candidates[0]&&data.candidates[0].content){var reply=data.candidates[0].content.parts[0].text;chatHistory.push({role:'model',parts:[{text:reply}]});msgs.innerHTML+='<div class="msg bot"><span class="sci-name">'+sci.name+'</span>'+reply.replace(/\n/g,'<br>')+'</div>'}else{msgs.innerHTML+='<div class="msg bot"><span class="sci-name">Sistema</span>Error en la respuesta. Verifica tu API Key.</div>'}}catch(err){var el=document.getElementById('typing');if(el)el.remove();msgs.innerHTML+='<div class="msg bot"><span class="sci-name">Sistema</span>Error: '+err.message+'</div>'}msgs.scrollTop=msgs.scrollHeight}
+
+function askSuggestion(btn){document.getElementById('chat-input').value=btn.textContent;sendChat()}
+
+// Floating quotes
+var quoteIdx=0;
+function showNextQuote(){var sci=scientists[selectedSci];var q=sci.quotes[quoteIdx%sci.quotes.length];quoteIdx++;var bubble=document.getElementById('chat-bubble');var tog=document.getElementById('chat-toggle');bubble.innerHTML='\u00AB'+q+'\u00BB \u2014 '+sci.name;var r=tog.getBoundingClientRect();bubble.style.left=r.left+'px';bubble.style.bottom=(window.innerHeight-r.top+8)+'px';bubble.classList.add('visible');setTimeout(function(){bubble.classList.remove('visible')},5000)}
+setInterval(showNextQuote,8000);setTimeout(showNextQuote,2000);
+
+// Draggable chat toggle
+(function(){var tog=document.getElementById('chat-toggle');var isDrag=false,startX,startY,origX,origY,wasDragged=false;
+tog.addEventListener('mousedown',function(e){isDrag=true;wasDragged=false;startX=e.clientX;startY=e.clientY;var r=tog.getBoundingClientRect();origX=r.left;origY=r.top;tog.style.transition='none';e.preventDefault()});
+document.addEventListener('mousemove',function(e){if(!isDrag)return;var dx=e.clientX-startX,dy=e.clientY-startY;if(Math.abs(dx)>4||Math.abs(dy)>4)wasDragged=true;tog.style.left=(origX+dx)+'px';tog.style.top=(origY+dy)+'px';tog.style.bottom='auto';tog.style.right='auto'});
+document.addEventListener('mouseup',function(){if(!isDrag)return;isDrag=false;tog.style.transition='box-shadow .3s'});
+tog.addEventListener('click',function(e){if(wasDragged){e.stopPropagation();return}document.getElementById('chat-panel').classList.toggle('open')});
+tog.addEventListener('touchstart',function(e){isDrag=true;wasDragged=false;var t=e.touches[0];startX=t.clientX;startY=t.clientY;var r=tog.getBoundingClientRect();origX=r.left;origY=r.top;tog.style.transition='none'},{passive:true});
+tog.addEventListener('touchmove',function(e){if(!isDrag)return;var t=e.touches[0];var dx=t.clientX-startX,dy=t.clientY-startY;if(Math.abs(dx)>4||Math.abs(dy)>4)wasDragged=true;tog.style.left=(origX+dx)+'px';tog.style.top=(origY+dy)+'px';tog.style.bottom='auto';tog.style.right='auto'},{passive:true});
+tog.addEventListener('touchend',function(){isDrag=false;tog.style.transition='box-shadow .3s';if(!wasDragged)document.getElementById('chat-panel').classList.toggle('open')});
+tog.removeAttribute('onclick')})();
+
+// Back-to-index buttons
+document.querySelectorAll('.page').forEach(function(p){if(p.classList.contains('cover-page'))return;var btn=document.createElement('button');btn.className='back-to-index';btn.title='Volver al Índice';btn.innerHTML='<i class="fas fa-list"></i>';btn.onclick=function(){goTo(0)};p.style.position='relative';p.appendChild(btn)});
+
+// ========== NARRATOR ==========
+var narratorActive=false;var synth=window.speechSynthesis;var bestVoice=null;
+function findBestVoice(){var voices=synth.getVoices();var priorities=[function(v){return v.lang==='es-MX'},function(v){return v.lang==='es-CO'},function(v){return v.lang==='es-US'},function(v){return v.lang==='es-ES'},function(v){return v.lang.startsWith('es-')},function(v){return v.lang.startsWith('es')}];for(var p=0;p<priorities.length;p++){var found=voices.find(priorities[p]);if(found){bestVoice=found;return}}}
+if(synth.onvoiceschanged!==undefined){synth.onvoiceschanged=findBestVoice}setTimeout(findBestVoice,500);
+
+function getPageText(){var spread=spreads[current];if(!spread)return'';var pages=spread.querySelectorAll('.page');var text='';pages.forEach(function(p){var clone=p.cloneNode(true);clone.querySelectorAll('canvas,svg,button,iframe,.sim-controls,.page-num,.back-to-index,script,style,input,select').forEach(function(el){el.remove()});var t=clone.textContent||'';t=t.replace(/\\[a-zA-Z]+/g,' ').replace(/[\$\{\}\[\]\\]/g,'').replace(/\s+/g,' ');text+=t.trim()+'. '});return text.replace(/\.\.+/g,'.').replace(/\s+/g,' ').trim()}
+
+function toggleNarrator(){var btn=document.getElementById('narrator-btn');var status=document.getElementById('narrator-status');if(narratorActive){synth.cancel();narratorActive=false;btn.classList.remove('speaking');btn.innerHTML='<i class="fas fa-volume-up"></i>';status.innerHTML='<i class="fas fa-stop-circle"></i> Detenido';status.classList.add('visible');setTimeout(function(){status.classList.remove('visible')},2500);return}var text=getPageText();if(!text||text.length<5){status.innerHTML='<i class="fas fa-info-circle"></i> Sin texto';status.classList.add('visible');setTimeout(function(){status.classList.remove('visible')},2500);return}if(!bestVoice)findBestVoice();narratorActive=true;btn.classList.add('speaking');btn.innerHTML='<i class="fas fa-stop"></i>';var chunks=[];var raw=text.split(/(?<=[.!?;:])\s+/);var chunk='';raw.forEach(function(s){if(!s.trim())return;if((chunk+' '+s).length>180){if(chunk.trim())chunks.push(chunk.trim());chunk=s}else{chunk+=(chunk?' ':'')+s}});if(chunk.trim())chunks.push(chunk.trim());var ci=0;function speakNext(){if(ci>=chunks.length||!narratorActive){narratorActive=false;btn.classList.remove('speaking');btn.innerHTML='<i class="fas fa-volume-up"></i>';status.innerHTML='<i class="fas fa-check-circle" style="color:#00c9a7"></i> Completada';setTimeout(function(){status.classList.remove('visible')},3000);return}var pct=Math.round(((ci+1)/chunks.length)*100);status.innerHTML='<i class="fas fa-headphones"></i> Leyendo... '+pct+'%';status.classList.add('visible');var utter=new SpeechSynthesisUtterance(chunks[ci]);utter.lang='es-MX';utter.rate=.92;utter.pitch=1.05;if(bestVoice)utter.voice=bestVoice;utter.onend=function(){ci++;setTimeout(speakNext,150)};utter.onerror=function(){ci++;speakNext()};synth.speak(utter)}speakNext()}
+
+// Stop narrator on page change
+var origGoTo=goTo;
+goTo=function(idx){if(narratorActive){synth.cancel();narratorActive=false;document.getElementById('narrator-btn').classList.remove('speaking');document.getElementById('narrator-btn').innerHTML='<i class="fas fa-volume-up"></i>';document.getElementById('narrator-status').classList.remove('visible')}origGoTo(idx)};
+
+// ========== SIM FULLSCREEN ==========
+function openSimFullscreen(){
+var modal=document.getElementById('sim-fullscreen-modal');
+var iframe=document.getElementById('sim-fullscreen-iframe');
+iframe.src='SIMULACION/Flauta_Virtual_Interactiva.html';
+modal.classList.add('open');
+}
+function closeSimFullscreen(){
+var modal=document.getElementById('sim-fullscreen-modal');
+var iframe=document.getElementById('sim-fullscreen-iframe');
+modal.classList.remove('open');
+iframe.src='';
+}
+document.addEventListener('keydown',function(e){
+if(e.key==='Escape'&&document.getElementById('sim-fullscreen-modal').classList.contains('open')){
+closeSimFullscreen();
+}
+});
+</script>
+</body>
+</html>
